@@ -59,32 +59,16 @@ $(function () {
     /**
      * Pfad-URL zum Bild für die Münze.
      * useBack: false/true -> Vorderseite/Rückseite
+     *
+     * Beispiel:
+     * http://www.kenom.de/iiif/image/record_DE-68_kenom_122749/record_DE-68_kenom_122749_vs.jpg/full/300,/0/default.jpg
      */
-    var createCoinSourcePath = function (coin, useBack) {
-        var prefix = 'file:///opt/digiverso/kenom_viewer/data/' + coin.magic + '/media/';
+    var createImageUrl = function (coin) {
+        var prefix = 'http://www.kenom.de/iiif/image'
         var folderName = 'record_' + coin.id;
-        var sideSuffix = useBack ? '_rs' : '_vs';
+        var sideSuffix = coin.back ? '_rs' : '_vs';
         var fileName = folderName + sideSuffix + '.jpg';
-        return prefix + folderName + '/' + fileName;
-    };
-
-    /**
-     * Erzeugt die vollständige Bild-URL für die gegebene
-     * Münze und Seite.
-     */
-    var createImageUrl = function (coin, useBack) {
-        var imageSize = 300;
-        var imageParameters = {
-            action: 'image',
-            sourcepath: createCoinSourcePath(coin, useBack),
-            width: imageSize,
-            height: imageSize,
-            rotate: 0,
-            resolution: 72,
-            thumbnail: true,
-            ignoreWatermark: true
-        };
-        return 'http://www.kenom.de/content/?' + $.param(imageParameters);
+        return prefix + '/' + folderName + '/' + fileName + '/full/300,/0/default.jpg';
     };
 
     /**
@@ -151,7 +135,7 @@ $(function () {
         // neue Bilder einfügen
         _.each(shuffledCoins, function (coin) {
             var li = document.createElement('li');
-            var imageUrl = createImageUrl(coin, coin.back);
+            var imageUrl = createImageUrl(coin);
             var identifyingString = imageUrl.replace(/.*record_/, '').replace(/_[vr]s.*/, '');
             li.setAttribute('data-' + identifierDataName, identifyingString);
             li.setAttribute('data-' + descriptionDataName, coin.title);

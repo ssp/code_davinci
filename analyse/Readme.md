@@ -48,36 +48,9 @@ Die Auswertung in [03-result-feldstatistik.tsv](blob/master/analyse/03-result-fe
 
 Einen Eindruck bekommen, [wie die Münzen über die Jahrhunderte verteilt sind](blob/master/analyse/04-results-years.tsv): Es gibt nicht zu jedem Jahrhundert gleichviele Münzen und viele sehr alte.
 
+### 05-reduce-data-for-memory.py: Daten für Memory-Spiel reduzieren
 
-### 05-extract-magic-numbers.py
-
-Da die geplante IIIF Schnittstelle für Bilder noch nicht umgesetzt ist und die Bild URLs vom Format
-
-```
-http://www.kenom.de/content/?action=image&sourcepath=file:///opt/digiverso/kenom_viewer/data/3/media/record_DE-MUS-805518_kenom_47075/record_DE-MUS-805518_kenom_47075_vs.jpg&width=600&height=500&rotate=0&resolution=72&ignoreWatermark=true
-```
-
-eine nicht-konstante und nicht offensichtlich vorhersagbare »magic number« im Abschnitt »data/_3_/media« enthalten, führt dies zu gelegentlich nicht ladbaren Bildern (Probieren vermittelt auch den Eindruck, dass der Bild-Server irreführende Statuscodes – 200 und leere Antwort, wenn die magic number »falsch« ist – liefert und dass teilweise mehrere Zahlen ein Ergebnis liefern.)
-
-Dieser Bearbeitungsschritt nutzt eine KENOM API, um Metadaten aus den Bild-URIs aller Datensätzen, die Suchergebnisse für das Wort Münze sind, die magic number zu extrahieren. Abruf, [Pretty-Printing](https://jmhodges.github.io/jsonpp/) und Speicherung der Daten erfolgte mit
-
-```
-curl "http://www.kenom.de/api?action=query&q=Münze" | jsonpp > 05-api-output.json
-```
-
-Das Ergebnis ist eine Map mit ID → magic number Zuordnung und die Zählung:
-
-```
-{'1': 5205, '2': 3028, '3': 4404}
-```
-
-
-### 06-merge-data.py
-
-Führt die Daten aus den Schritten 3 und 5 zusammen und reduziert die Größe der Ausgabedatei.
-
-Das JSON der Ergebnisdatei ist nun knapp 3&nbsp;MB groß. Mit gzip Komprimierung schrumpft sie auf knapp 120&nbsp;KB.
-
+Nur die notwendigen Felder behalten.
 
 ### Weitere Schritte und Ideen
 
@@ -98,3 +71,5 @@ Das JSON der Ergebnisdatei ist nun knapp 3&nbsp;MB groß. Mit gzip Komprimierung
             </lido:objectMeasurements>
           </lido:objectMeasurementsSet>
         </lido:objectMeasurementsWrap>
+
+* LIDO Daten über OAI auffrischen: http://www.kenom.de/oai/ [Dokumentation](http://dokumentation.digitalebibliothek.gbv.de/kenom:Dokumentation_der_OAI-Schnittstelle_von_KENOM)

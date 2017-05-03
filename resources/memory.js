@@ -2,6 +2,9 @@
 $(function () {
     'use strict';
 
+    // Quelldatei mit Bilddaten.
+    var jsonURL = 'https://raw.githubusercontent.com/ssp/coding-da-vinci-kenom/master/analyse/05-result-memory.json';
+
     // Die verfügbaren Bilder.
     var imageData = [];
 
@@ -443,7 +446,7 @@ $(function () {
     /**
      * Münzdaten (asynchron) laden.
      */
-    $.getJSON('https://raw.githubusercontent.com/ssp/coding-da-vinci-kenom/master/analyse/06-result-memory.json', function (data) {
+    $.getJSON(jsonURL, function (data) {
         imageData = data;
         resetGame();
     });
